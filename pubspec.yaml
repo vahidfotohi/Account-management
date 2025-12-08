@@ -1,5 +1,5 @@
-name: account_management
-description: "Account management"
+name: construction_manager
+description: "construction manager"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -34,13 +34,13 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-
+  flutter_localizations:
+    sdk: flutter
   # State Management
   flutter_riverpod: ^2.5.1
   riverpod_annotation: ^2.5.1
-
+  flutter_hooks: ^0.21.3+1
   # Database
-
   drift: ^2.15.0
   drift_flutter: ^0.2.7
   sqlite3_flutter_libs: ^0.5.24
@@ -49,9 +49,10 @@ dependencies:
   json_annotation: ^4.9.0
 
   # Utils
+  uuid: ^4.5.2
   path_provider: ^2.1.3
   path: ^1.9.0
-  intl: ^0.19.0
+  intl: 0.20.2
 
   # Permissions & storage
   flutter_secure_storage: ^9.0.0
@@ -60,7 +61,7 @@ dependencies:
 
   # PDF / Printing
   pdf: ^3.11.0
-  printing: ^5.12.0
+  hooks_riverpod: ^2.6.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
