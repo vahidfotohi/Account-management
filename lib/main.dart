@@ -1,3 +1,4 @@
+import 'package:construction_manager/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -27,11 +28,7 @@ class MyApp extends ConsumerWidget {
         Locale('fa'),
       ],
       locale: const Locale('fa'),
-      theme: ThemeData(
-        useMaterial3: true,
-        fontFamily: 'Vazir', // اگر فونت ندارید، این خط را کامنت کنید
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
-      ),
+      theme: AppTheme.lightTheme,
     );
   }
 }
