@@ -29,7 +29,7 @@ class WorkEntryRepositoryImpl implements WorkEntryRepository {
     return (_db.select(_db.workEntries)
           ..where((tbl) => tbl.projectId.equals(projectId))
           ..orderBy([
-            (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc)
+            (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
           ]))
         .watch()
         .map((rows) => rows.map((row) => row.toDomain()).toList());
@@ -40,7 +40,7 @@ class WorkEntryRepositoryImpl implements WorkEntryRepository {
     return (_db.select(_db.workEntries)
           ..where((tbl) => tbl.id.equals(workerId))
           ..orderBy([
-            (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc)
+            (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
           ]))
         .watch()
         .map(

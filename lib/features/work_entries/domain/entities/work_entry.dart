@@ -11,6 +11,7 @@ class WorkEntry with _$WorkEntry {
     required DateTime date,
     required double amount,
     String? description,
+    required double wageAtTime,
     required DateTime createdAt,
   }) = _WorkEntry;
 }

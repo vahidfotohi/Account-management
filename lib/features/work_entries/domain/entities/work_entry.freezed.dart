@@ -22,6 +22,7 @@ mixin _$WorkEntry {
   DateTime get date => throw _privateConstructorUsedError;
   double get amount => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
+  double get wageAtTime => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
 
   /// Create a copy of WorkEntry
@@ -43,6 +44,7 @@ abstract class $WorkEntryCopyWith<$Res> {
       DateTime date,
       double amount,
       String? description,
+      double wageAtTime,
       DateTime createdAt});
 }
 
@@ -67,6 +69,7 @@ class _$WorkEntryCopyWithImpl<$Res, $Val extends WorkEntry>
     Object? date = null,
     Object? amount = null,
     Object? description = freezed,
+    Object? wageAtTime = null,
     Object? createdAt = null,
   }) {
     return _then(_value.copyWith(
@@ -94,6 +97,10 @@ class _$WorkEntryCopyWithImpl<$Res, $Val extends WorkEntry>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      wageAtTime: null == wageAtTime
+          ? _value.wageAtTime
+          : wageAtTime // ignore: cast_nullable_to_non_nullable
+              as double,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -117,6 +124,7 @@ abstract class _$$WorkEntryImplCopyWith<$Res>
       DateTime date,
       double amount,
       String? description,
+      double wageAtTime,
       DateTime createdAt});
 }
 
@@ -139,6 +147,7 @@ class __$$WorkEntryImplCopyWithImpl<$Res>
     Object? date = null,
     Object? amount = null,
     Object? description = freezed,
+    Object? wageAtTime = null,
     Object? createdAt = null,
   }) {
     return _then(_$WorkEntryImpl(
@@ -166,6 +175,10 @@ class __$$WorkEntryImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      wageAtTime: null == wageAtTime
+          ? _value.wageAtTime
+          : wageAtTime // ignore: cast_nullable_to_non_nullable
+              as double,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -184,6 +197,7 @@ class _$WorkEntryImpl implements _WorkEntry {
       required this.date,
       required this.amount,
       this.description,
+      required this.wageAtTime,
       required this.createdAt});
 
   @override
@@ -199,11 +213,13 @@ class _$WorkEntryImpl implements _WorkEntry {
   @override
   final String? description;
   @override
+  final double wageAtTime;
+  @override
   final DateTime createdAt;
 
   @override
   String toString() {
-    return 'WorkEntry(id: $id, workerId: $workerId, projectId: $projectId, date: $date, amount: $amount, description: $description, createdAt: $createdAt)';
+    return 'WorkEntry(id: $id, workerId: $workerId, projectId: $projectId, date: $date, amount: $amount, description: $description, wageAtTime: $wageAtTime, createdAt: $createdAt)';
   }
 
   @override
@@ -220,13 +236,15 @@ class _$WorkEntryImpl implements _WorkEntry {
             (identical(other.amount, amount) || other.amount == amount) &&
             (identical(other.description, description) ||
                 other.description == description) &&
+            (identical(other.wageAtTime, wageAtTime) ||
+                other.wageAtTime == wageAtTime) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, id, workerId, projectId, date,
-      amount, description, createdAt);
+      amount, description, wageAtTime, createdAt);
 
   /// Create a copy of WorkEntry
   /// with the given fields replaced by the non-null parameter values.
@@ -245,6 +263,7 @@ abstract class _WorkEntry implements WorkEntry {
       required final DateTime date,
       required final double amount,
       final String? description,
+      required final double wageAtTime,
       required final DateTime createdAt}) = _$WorkEntryImpl;
 
   @override
@@ -259,6 +278,8 @@ abstract class _WorkEntry implements WorkEntry {
   double get amount;
   @override
   String? get description;
+  @override
+  double get wageAtTime;
   @override
   DateTime get createdAt;
 
