@@ -62,6 +62,13 @@ dependencies:
   # PDF / Printing
   pdf: ^3.11.0
   hooks_riverpod: ^2.6.1
+  file_picker: ^10.3.7
+  flutter_file_dialog: ^3.0.3
+  shamsi_date: ^1.1.1
+  rxdart: ^0.28.0
+#  video_player: ^2.10.1
+#  persian_tools: ^1.0.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -70,13 +77,35 @@ dev_dependencies:
   freezed: ^2.4.5
   json_serializable: ^6.8.0
   riverpod_generator: ^2.5.1
+  flutter_native_splash: ^2.3.1
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.4
 
+
+flutter_native_splash:
+  color: "#1E293B" # رنگ سرمه‌ای تم شما
+  image: assets/icon.png # مسیر فایل لوگوی شما
+  # تنظیمات برای اندروید 12 به بالا (که از آیکون اپلیکیشن استفاده می‌کند)
+  fullscreen: true
+  android: true
+  android_12:
+    image: assets/icon.png
+    icon_background_color: "#1E293B"
+  # تنظیمات برای حالت تاریک (اختیاری)
+  # dark_color: "#000000"
+  # dark_image: assets/logo_dark.png
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon.png"
+
+  min_sdk_android: 21
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -89,8 +118,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
