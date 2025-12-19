@@ -2,7 +2,22 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'worker.freezed.dart';
 
-enum WageType { daily, hourly, metri }
+enum WageType {
+  daily,
+  hourly,
+  metri;
+
+  String get label {
+    switch (this) {
+      case WageType.daily:
+        return 'روزانه';
+      case WageType.hourly:
+        return 'ساعتی';
+      case WageType.metri:
+        return 'متری';
+    }
+  }
+}
 
 @freezed
 class Worker with _$Worker {
@@ -14,6 +29,9 @@ class Worker with _$Worker {
     required double baseWage,
     required bool isActive,
     String? phoneNumber,
+    String? cardNumber,
+    String? shebaNumber,
+    double? initialDebt,
     String? notes,
     required DateTime createdAt,
     required DateTime updatedAt,

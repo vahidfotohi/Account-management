@@ -46,6 +46,15 @@ class WorkerRepositoryImpl implements WorkerRepository {
 
   @override
   Future<void> deleteWorker(String id) async {
-    await (_db.delete(_db.workers)..where((tbl) => tbl.id.equals(id))).go();
+    await _db.transaction(() async {
+      // ۱. حذف تمام کارکردهای این کارگر
+      await (_db.delete(_db.workEntries)..where((tbl) => tbl.workerId.equals(id))).go();
+
+      // ۲. حذف تمام پرداختی‌های این کارگر
+      await (_db.delete(_db.payments)..where((tbl) => tbl.workerId.equals(id))).go();
+
+      // ۳. حذف خود کارگر
+      await (_db.delete(_db.workers)..where((tbl) => tbl.id.equals(id))).go();
+    });
   }
 }

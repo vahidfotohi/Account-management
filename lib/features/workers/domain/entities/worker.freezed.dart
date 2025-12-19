@@ -23,6 +23,9 @@ mixin _$Worker {
   double get baseWage => throw _privateConstructorUsedError;
   bool get isActive => throw _privateConstructorUsedError;
   String? get phoneNumber => throw _privateConstructorUsedError;
+  String? get cardNumber => throw _privateConstructorUsedError;
+  String? get shebaNumber => throw _privateConstructorUsedError;
+  double? get initialDebt => throw _privateConstructorUsedError;
   String? get notes => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
@@ -46,6 +49,9 @@ abstract class $WorkerCopyWith<$Res> {
       double baseWage,
       bool isActive,
       String? phoneNumber,
+      String? cardNumber,
+      String? shebaNumber,
+      double? initialDebt,
       String? notes,
       DateTime createdAt,
       DateTime updatedAt});
@@ -73,6 +79,9 @@ class _$WorkerCopyWithImpl<$Res, $Val extends Worker>
     Object? baseWage = null,
     Object? isActive = null,
     Object? phoneNumber = freezed,
+    Object? cardNumber = freezed,
+    Object? shebaNumber = freezed,
+    Object? initialDebt = freezed,
     Object? notes = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -106,6 +115,18 @@ class _$WorkerCopyWithImpl<$Res, $Val extends Worker>
           ? _value.phoneNumber
           : phoneNumber // ignore: cast_nullable_to_non_nullable
               as String?,
+      cardNumber: freezed == cardNumber
+          ? _value.cardNumber
+          : cardNumber // ignore: cast_nullable_to_non_nullable
+              as String?,
+      shebaNumber: freezed == shebaNumber
+          ? _value.shebaNumber
+          : shebaNumber // ignore: cast_nullable_to_non_nullable
+              as String?,
+      initialDebt: freezed == initialDebt
+          ? _value.initialDebt
+          : initialDebt // ignore: cast_nullable_to_non_nullable
+              as double?,
       notes: freezed == notes
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
@@ -137,6 +158,9 @@ abstract class _$$WorkerImplCopyWith<$Res> implements $WorkerCopyWith<$Res> {
       double baseWage,
       bool isActive,
       String? phoneNumber,
+      String? cardNumber,
+      String? shebaNumber,
+      double? initialDebt,
       String? notes,
       DateTime createdAt,
       DateTime updatedAt});
@@ -162,6 +186,9 @@ class __$$WorkerImplCopyWithImpl<$Res>
     Object? baseWage = null,
     Object? isActive = null,
     Object? phoneNumber = freezed,
+    Object? cardNumber = freezed,
+    Object? shebaNumber = freezed,
+    Object? initialDebt = freezed,
     Object? notes = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -195,6 +222,18 @@ class __$$WorkerImplCopyWithImpl<$Res>
           ? _value.phoneNumber
           : phoneNumber // ignore: cast_nullable_to_non_nullable
               as String?,
+      cardNumber: freezed == cardNumber
+          ? _value.cardNumber
+          : cardNumber // ignore: cast_nullable_to_non_nullable
+              as String?,
+      shebaNumber: freezed == shebaNumber
+          ? _value.shebaNumber
+          : shebaNumber // ignore: cast_nullable_to_non_nullable
+              as String?,
+      initialDebt: freezed == initialDebt
+          ? _value.initialDebt
+          : initialDebt // ignore: cast_nullable_to_non_nullable
+              as double?,
       notes: freezed == notes
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
@@ -222,6 +261,9 @@ class _$WorkerImpl implements _Worker {
       required this.baseWage,
       required this.isActive,
       this.phoneNumber,
+      this.cardNumber,
+      this.shebaNumber,
+      this.initialDebt,
       this.notes,
       required this.createdAt,
       required this.updatedAt});
@@ -241,6 +283,12 @@ class _$WorkerImpl implements _Worker {
   @override
   final String? phoneNumber;
   @override
+  final String? cardNumber;
+  @override
+  final String? shebaNumber;
+  @override
+  final double? initialDebt;
+  @override
   final String? notes;
   @override
   final DateTime createdAt;
@@ -249,7 +297,7 @@ class _$WorkerImpl implements _Worker {
 
   @override
   String toString() {
-    return 'Worker(id: $id, name: $name, jobTitle: $jobTitle, wageType: $wageType, baseWage: $baseWage, isActive: $isActive, phoneNumber: $phoneNumber, notes: $notes, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Worker(id: $id, name: $name, jobTitle: $jobTitle, wageType: $wageType, baseWage: $baseWage, isActive: $isActive, phoneNumber: $phoneNumber, cardNumber: $cardNumber, shebaNumber: $shebaNumber, initialDebt: $initialDebt, notes: $notes, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -269,6 +317,12 @@ class _$WorkerImpl implements _Worker {
                 other.isActive == isActive) &&
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
+            (identical(other.cardNumber, cardNumber) ||
+                other.cardNumber == cardNumber) &&
+            (identical(other.shebaNumber, shebaNumber) ||
+                other.shebaNumber == shebaNumber) &&
+            (identical(other.initialDebt, initialDebt) ||
+                other.initialDebt == initialDebt) &&
             (identical(other.notes, notes) || other.notes == notes) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
@@ -277,8 +331,21 @@ class _$WorkerImpl implements _Worker {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, jobTitle, wageType,
-      baseWage, isActive, phoneNumber, notes, createdAt, updatedAt);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      name,
+      jobTitle,
+      wageType,
+      baseWage,
+      isActive,
+      phoneNumber,
+      cardNumber,
+      shebaNumber,
+      initialDebt,
+      notes,
+      createdAt,
+      updatedAt);
 
   /// Create a copy of Worker
   /// with the given fields replaced by the non-null parameter values.
@@ -298,6 +365,9 @@ abstract class _Worker implements Worker {
       required final double baseWage,
       required final bool isActive,
       final String? phoneNumber,
+      final String? cardNumber,
+      final String? shebaNumber,
+      final double? initialDebt,
       final String? notes,
       required final DateTime createdAt,
       required final DateTime updatedAt}) = _$WorkerImpl;
@@ -316,6 +386,12 @@ abstract class _Worker implements Worker {
   bool get isActive;
   @override
   String? get phoneNumber;
+  @override
+  String? get cardNumber;
+  @override
+  String? get shebaNumber;
+  @override
+  double? get initialDebt;
   @override
   String? get notes;
   @override

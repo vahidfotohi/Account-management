@@ -7,9 +7,7 @@ class AddWorkerUseCase {
   AddWorkerUseCase(this._repository);
 
   Future<void> call(Worker worker) {
-    // اینجا می‌توانید قوانین بیزنس را چک کنید
-    // مثلاً: نام کارگر نباید خالی باشد
-    if (worker.name.isEmpty) throw Exception("Name cannot be empty");
+    if (worker.name.isEmpty) throw Exception('Name cannot be empty');
     return _repository.addWorker(worker);
   }
 }

@@ -12,11 +12,4 @@ class WorkersList extends _$WorkersList {
     final useCase = ref.watch(watchWorkersUseCaseProvider);
     return useCase();
   }
-
-  // متد کمکی برای حذف (اختیاری، می‌تواند در کنترلی جدا باشد)
-  Future<void> deleteWorker(String id) async {
-    final repo = ref.read(workerRepositoryProvider);
-    await repo.deleteWorker(id);
-    // استریم خودکار آپدیت می‌شود
-  }
 }
