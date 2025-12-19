@@ -7,7 +7,15 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('مدیریت ساختمانی')),
+      appBar: AppBar(
+        title: const Text('مدیریت ساختمانی'),
+        actions: [
+          IconButton(
+            onPressed: () => context.push('/settings'),
+            icon: const Icon(Icons.settings),
+          ),
+        ],
+      ),
       body: GridView.count(
         crossAxisCount: 2,
         padding: const EdgeInsets.all(16),
@@ -15,7 +23,7 @@ class HomePage extends StatelessWidget {
         mainAxisSpacing: 16,
         children: [
           _MenuCard(
-            title: 'کارگران',
+            title: 'پرسنل',
             icon: Icons.people,
             color: Colors.blueAccent,
             onTap: () => context.push('/workers'),
@@ -29,10 +37,28 @@ class HomePage extends StatelessWidget {
           _MenuCard(
             title: 'ثبت کارکرد',
             icon: Icons.assignment_add,
-            color: Colors.green,
+            color: Colors.deepPurpleAccent,
             onTap: () {
               context.push('/add-work-entry'); // مسیر جدید
             },
+          ),
+          _MenuCard(
+            title: 'پرداختی (هزینه)',
+            icon: Icons.payment,
+            color: Colors.redAccent,
+            onTap: () => context.push('/add-payment'),
+          ),
+          _MenuCard(
+            title: 'دریافتی (درآمد)',
+            icon: Icons.account_balance_wallet,
+            color: Colors.green,
+            onTap: () => context.push('/add-receipt'),
+          ),
+          _MenuCard(
+            title: 'تاریخچه تراکنش‌ها',
+            icon: Icons.history,
+            color: Colors.blueGrey,
+            onTap: () => context.push('/transactions'),
           ),
         ],
       ),
@@ -46,7 +72,11 @@ class _MenuCard extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
 
-  const _MenuCard({required this.title, required this.icon, required this.color, required this.onTap});
+  const _MenuCard(
+      {required this.title,
+      required this.icon,
+      required this.color,
+      required this.onTap,});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +94,9 @@ class _MenuCard extends StatelessWidget {
           children: [
             Icon(icon, size: 40, color: color),
             const SizedBox(height: 10),
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            Text(title,
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
           ],
         ),
       ),
