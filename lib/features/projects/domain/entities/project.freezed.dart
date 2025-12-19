@@ -21,6 +21,7 @@ mixin _$Project {
   String? get location => throw _privateConstructorUsedError;
   String? get employerName => throw _privateConstructorUsedError;
   bool get isCompleted => throw _privateConstructorUsedError;
+  bool get isActive => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
 
@@ -41,6 +42,7 @@ abstract class $ProjectCopyWith<$Res> {
       String? location,
       String? employerName,
       bool isCompleted,
+      bool isActive,
       DateTime createdAt,
       DateTime updatedAt});
 }
@@ -65,6 +67,7 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
     Object? location = freezed,
     Object? employerName = freezed,
     Object? isCompleted = null,
+    Object? isActive = null,
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
@@ -88,6 +91,10 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
       isCompleted: null == isCompleted
           ? _value.isCompleted
           : isCompleted // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isActive: null == isActive
+          ? _value.isActive
+          : isActive // ignore: cast_nullable_to_non_nullable
               as bool,
       createdAt: null == createdAt
           ? _value.createdAt
@@ -114,6 +121,7 @@ abstract class _$$ProjectImplCopyWith<$Res> implements $ProjectCopyWith<$Res> {
       String? location,
       String? employerName,
       bool isCompleted,
+      bool isActive,
       DateTime createdAt,
       DateTime updatedAt});
 }
@@ -136,6 +144,7 @@ class __$$ProjectImplCopyWithImpl<$Res>
     Object? location = freezed,
     Object? employerName = freezed,
     Object? isCompleted = null,
+    Object? isActive = null,
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
@@ -160,6 +169,10 @@ class __$$ProjectImplCopyWithImpl<$Res>
           ? _value.isCompleted
           : isCompleted // ignore: cast_nullable_to_non_nullable
               as bool,
+      isActive: null == isActive
+          ? _value.isActive
+          : isActive // ignore: cast_nullable_to_non_nullable
+              as bool,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -181,6 +194,7 @@ class _$ProjectImpl implements _Project {
       this.location,
       this.employerName,
       required this.isCompleted,
+      required this.isActive,
       required this.createdAt,
       required this.updatedAt});
 
@@ -195,13 +209,15 @@ class _$ProjectImpl implements _Project {
   @override
   final bool isCompleted;
   @override
+  final bool isActive;
+  @override
   final DateTime createdAt;
   @override
   final DateTime updatedAt;
 
   @override
   String toString() {
-    return 'Project(id: $id, name: $name, location: $location, employerName: $employerName, isCompleted: $isCompleted, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Project(id: $id, name: $name, location: $location, employerName: $employerName, isCompleted: $isCompleted, isActive: $isActive, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -217,6 +233,8 @@ class _$ProjectImpl implements _Project {
                 other.employerName == employerName) &&
             (identical(other.isCompleted, isCompleted) ||
                 other.isCompleted == isCompleted) &&
+            (identical(other.isActive, isActive) ||
+                other.isActive == isActive) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -225,7 +243,7 @@ class _$ProjectImpl implements _Project {
 
   @override
   int get hashCode => Object.hash(runtimeType, id, name, location, employerName,
-      isCompleted, createdAt, updatedAt);
+      isCompleted, isActive, createdAt, updatedAt);
 
   /// Create a copy of Project
   /// with the given fields replaced by the non-null parameter values.
@@ -243,6 +261,7 @@ abstract class _Project implements Project {
       final String? location,
       final String? employerName,
       required final bool isCompleted,
+      required final bool isActive,
       required final DateTime createdAt,
       required final DateTime updatedAt}) = _$ProjectImpl;
 
@@ -256,6 +275,8 @@ abstract class _Project implements Project {
   String? get employerName;
   @override
   bool get isCompleted;
+  @override
+  bool get isActive;
   @override
   DateTime get createdAt;
   @override

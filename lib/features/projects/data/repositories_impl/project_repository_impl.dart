@@ -17,18 +17,38 @@ class ProjectRepositoryImpl implements ProjectRepository {
   Stream<List<Project>> watchProjects() {
     return _db.select(_db.projects).watch().map(
           (rows) => rows.map((row) => row.toDomain()).toList(),
-    );
+        );
   }
 
   @override
   Future<Project?> getProjectById(String id) async {
-    final row = await (_db.select(_db.projects)..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+    final row = await (_db.select(_db.projects)
+          ..where((tbl) => tbl.id.equals(id)))
+        .getSingleOrNull();
     return row?.toDomain();
   }
 
   @override
   Future<void> deleteProject(String id) async {
-    await (_db.delete(_db.projects)..where((tbl) => tbl.id.equals(id))).go();
+    await _db.transaction(() async {
+      // ۱. حذف تمام کارکردهای این پروژه
+      await (_db.delete(_db.workEntries)
+            ..where((tbl) => tbl.projectId.equals(id)))
+          .go();
+
+      // ۲. حذف تمام رسیدهای (دریافتی‌های) این پروژه
+      // (داخل try/catch می‌گذاریم چون شاید هنوز جدول receipts را نساخته باشید یا مایگریشن نکرده باشید)
+      try {
+        await (_db.delete(_db.receipts)
+              ..where((tbl) => tbl.projectId.equals(id)))
+            .go();
+      } catch (e) {
+        // نادیده گرفتن
+      }
+
+      // ۳. در نهایت، حذف خود پروژه
+      await (_db.delete(_db.projects)..where((tbl) => tbl.id.equals(id))).go();
+    });
   }
 
   @override
