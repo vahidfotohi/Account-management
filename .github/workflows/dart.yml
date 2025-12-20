@@ -36,6 +36,7 @@ jobs:
           echo "CODE_SIGNING_REQUIRED=NO" >> Flutter/Release.xcconfig
           echo "CODE_SIGN_IDENTITY=" >> Flutter/Release.xcconfig
           cd ..
+      - run: chmod +x ios/Flutter/AppFrameworkInfo.plist
 
       - name: 🚀 Build iOS (The Reliable Way)
         run: |
