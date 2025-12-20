@@ -17,15 +17,14 @@ jobs:
 
       - run: flutter pub get
 
-      # مرحله ۱: نصب پادها (اینجا فایل پروژه ساخته می‌شود)
+      # ۱. نصب پادها (اینجا فایل پروژه خام تولید می‌شود)
       - name: Install Pods
         run: |
           cd ios
           pod install --repo-update
           cd ..
 
-      # مرحله ۲: اصلاح پروژه با Ruby (روش تضمینی)
-      # این اسکریپت فایل پروژه را باز می‌کند و تمام تنظیمات امضا را حذف می‌کند
+      # ۲. جراحی دقیق فایل پروژه با روبی (برای رفع مشکل RunnerTests)
       - name: Disable Code Signing via Ruby
         run: |
           cd ios
@@ -34,9 +33,13 @@ jobs:
             project_path = "Runner.xcodeproj"
             project = Xcodeproj::Project.open(project_path)
           
-            # 1. تنظیمات بیلد را برای همه تارگت‌ها اصلاح کن
+            # چرخیدن روی تمام تارگت‌ها (هم Runner و هم RunnerTests)
             project.targets.each do |target|
               target.build_configurations.each do |config|
+                # اجبار به حالت دستی برای جلوگیری از چک کردن اکانت اپل
+                config.build_settings["CODE_SIGN_STYLE"] = "Manual"
+          
+                # غیرفعال کردن تمام الزامات امضا
                 config.build_settings["CODE_SIGNING_ALLOWED"] = "NO"
                 config.build_settings["CODE_SIGNING_REQUIRED"] = "NO"
                 config.build_settings["CODE_SIGN_IDENTITY"] = ""
@@ -46,18 +49,17 @@ jobs:
               end
             end
           
-            # 2. مهم: حذف attributes که شامل Team ID است
+            # حذف اتریبیوت‌هایی که ممکن است تیم آی‌دی قدیمی را نگه دارند
             project.root_object.attributes.delete("TargetAttributes")
           
-            # 3. ذخیره فایل
             project.save
           '
           cd ..
 
-      # مرحله ۳: بیلد (بدون گیر کردن روی امضا)
+      # ۳. بیلد نهایی
       - run: flutter build ios --release --no-codesign
 
-      # مرحله ۴: ساخت Payload برای ipa
+      # ۴. پکیج کردن خروجی
       - run: mkdir Payload
         working-directory: build/ios/iphoneos
 
@@ -75,3 +77,4 @@ jobs:
           file: build/ios/iphoneos/FlutterIpaExport.ipa
           tag: v1.0
           overwrite: true
+          body: "Release generated via Ruby fix"
