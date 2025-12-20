@@ -17,65 +17,66 @@ jobs:
 
       - run: flutter pub get
 
-      # مرحله ۱: نصب پادها
+      # مرحله ۱: نصب پادها (بسیار مهم: اول باید پروژه Pods ساخته شود)
       - name: Install Pods
         run: |
           cd ios
           pod install --repo-update
           cd ..
 
-      # مرحله ۲: حمله سه‌جانبه به تنظیمات ساینینگ
-      - name: Force Disable Signing (Project + Configs)
+      # مرحله ۲: جراحی کامل (Runner + Pods) با روبی
+      - name: Disable Code Signing completely (Runner & Pods)
         run: |
           cd ios
-          
-          # الف) لایه اول: اصلاح فایل پروژه با Ruby
           ruby -e '
             require "xcodeproj"
-            project_path = "Runner.xcodeproj"
-            project = Xcodeproj::Project.open(project_path)
+
+            # تابع کمکی برای غیرفعال کردن ساینینگ در یک پروژه
+            def disable_signing(project_path)
+              return unless File.exist?(project_path)
+              puts "Processing: #{project_path}"
+              project = Xcodeproj::Project.open(project_path)
           
-            project.targets.each do |target|
-              target.build_configurations.each do |config|
-                config.build_settings["CODE_SIGN_STYLE"] = "Manual"
-                config.build_settings["CODE_SIGNING_ALLOWED"] = "NO"
-                config.build_settings["CODE_SIGNING_REQUIRED"] = "NO"
-                config.build_settings["CODE_SIGN_IDENTITY"] = ""
-                config.build_settings["EXPANDED_CODE_SIGN_IDENTITY"] = ""
-                config.build_settings["PROVISIONING_PROFILE_SPECIFIER"] = ""
-                config.build_settings["DEVELOPMENT_TEAM"] = ""
+              project.targets.each do |target|
+                puts "  Target: #{target.name}"
+                target.build_configurations.each do |config|
+                  config.build_settings["CODE_SIGN_STYLE"] = "Manual"
+                  config.build_settings["CODE_SIGNING_ALLOWED"] = "NO"
+                  config.build_settings["CODE_SIGNING_REQUIRED"] = "NO"
+                  config.build_settings["CODE_SIGN_IDENTITY"] = ""
+                  config.build_settings["EXPANDED_CODE_SIGN_IDENTITY"] = ""
+                  config.build_settings["PROVISIONING_PROFILE_SPECIFIER"] = ""
+                  config.build_settings["DEVELOPMENT_TEAM"] = ""
+                end
               end
-            end
           
-            # حذف اتریبیوت‌های مزاحم
-            project.root_object.attributes.delete("TargetAttributes")
-            project.save
+              # فقط در پروژه اصلی این اتریبیوت‌ها وجود دارند
+              if project.root_object.attributes["TargetAttributes"]
+                 project.root_object.attributes.delete("TargetAttributes")
+              end
+          
+              project.save
+            end
+
+            # 1. اصلاح پروژه اصلی
+            disable_signing("Runner.xcodeproj")
+          
+            # 2. اصلاح پروژه پادها (اغلب ارور از اینجا ناشی می‌شود)
+            disable_signing("Pods/Pods.xcodeproj")
           '
           
-          # ب) لایه دوم: تزریق تنظیمات به فایل‌های XCConfig فلاتر
-          # این فایل‌ها تنظیمات پروژه را بازنویسی می‌کنند، پس باید اینجا هم غیرفعال کنیم
+          # لایه اطمینان: تزریق به فایل‌های کانفیگ فلاتر
           echo "CODE_SIGNING_REQUIRED=NO" >> Flutter/Release.xcconfig
           echo "CODE_SIGNING_ALLOWED=NO" >> Flutter/Release.xcconfig
           echo "CODE_SIGN_IDENTITY=" >> Flutter/Release.xcconfig
           echo "EXPANDED_CODE_SIGN_IDENTITY=" >> Flutter/Release.xcconfig
           
-          # محض اطمینان برای Debug و Generated هم انجام میدهیم
-          echo "CODE_SIGNING_REQUIRED=NO" >> Flutter/Debug.xcconfig
-          echo "CODE_SIGNING_ALLOWED=NO" >> Flutter/Debug.xcconfig
-          
           cd ..
 
-      # مرحله ۳: بیلد با آرگومان‌های زورکی (لایه سوم)
-      # نکته مهم: آرگومان‌های بعد از -- مستقیماً به xcodebuild می‌روند
-      - name: Build iOS without Signing
-        run: >
-          flutter build ios --release --no-codesign --
-          CODE_SIGNING_REQUIRED=NO 
-          CODE_SIGNING_ALLOWED=NO 
-          CODE_SIGN_IDENTITY="" 
-          EXPANDED_CODE_SIGN_IDENTITY=""
+      # مرحله ۳: بیلد تمیز (بدون آرگومان‌های اضافه که باعث ارور می‌شدند)
+      - run: flutter build ios --release --no-codesign
 
-      # مرحله ۴: ساخت Payload
+      # مرحله ۴: پکیج کردن
       - run: mkdir Payload
         working-directory: build/ios/iphoneos
 
@@ -93,4 +94,4 @@ jobs:
           file: build/ios/iphoneos/FlutterIpaExport.ipa
           tag: v1.0
           overwrite: true
-          body: "Release generated with Triple-Layer Force Fix"
+          body: "Signed-disabled release"
