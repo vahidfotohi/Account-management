@@ -17,35 +17,47 @@ jobs:
 
       - run: flutter pub get
 
-      # مرحله ۱: اول پادها را نصب می‌کنیم تا فایل پروژه کامل ساخته شود
+      # مرحله ۱: نصب پادها (اینجا فایل پروژه ساخته می‌شود)
       - name: Install Pods
         run: |
           cd ios
           pod install --repo-update
           cd ..
 
-      # مرحله ۲: حالا که فایل پروژه نهایی شد، امضا را غیرفعال می‌کنیم
-      - name: Disable Code Signing and Identities
+      # مرحله ۲: اصلاح پروژه با Ruby (روش تضمینی)
+      # این اسکریپت فایل پروژه را باز می‌کند و تمام تنظیمات امضا را حذف می‌کند
+      - name: Disable Code Signing via Ruby
         run: |
           cd ios
+          ruby -e '
+            require "xcodeproj"
+            project_path = "Runner.xcodeproj"
+            project = Xcodeproj::Project.open(project_path)
           
-          # 1. تغییر حالت ساینینگ از Automatic به Manual
-          sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' Runner.xcodeproj/project.pbxproj
+            # 1. تنظیمات بیلد را برای همه تارگت‌ها اصلاح کن
+            project.targets.each do |target|
+              target.build_configurations.each do |config|
+                config.build_settings["CODE_SIGNING_ALLOWED"] = "NO"
+                config.build_settings["CODE_SIGNING_REQUIRED"] = "NO"
+                config.build_settings["CODE_SIGN_IDENTITY"] = ""
+                config.build_settings["EXPANDED_CODE_SIGN_IDENTITY"] = ""
+                config.build_settings["PROVISIONING_PROFILE_SPECIFIER"] = ""
+                config.build_settings["DEVELOPMENT_TEAM"] = ""
+              end
+            end
           
-          # 2. حذف Development Team
-          sed -i '' 's/DevelopmentTeam = .*/DevelopmentTeam = "";/g' Runner.xcodeproj/project.pbxproj
+            # 2. مهم: حذف attributes که شامل Team ID است
+            project.root_object.attributes.delete("TargetAttributes")
           
-          # 3. غیرفعال کردن اجبار به ساین شدن
-          sed -i '' 's/CODE_SIGNING_REQUIRED = YES/CODE_SIGNING_REQUIRED = NO/g' Runner.xcodeproj/project.pbxproj
-          sed -i '' 's/CODE_SIGNING_ALLOWED = YES/CODE_SIGNING_ALLOWED = NO/g' Runner.xcodeproj/project.pbxproj
-          
-          # 4. خالی کردن هویت ساینینگ (مهم‌ترین بخش برای رفع ارور شما)
-          sed -i '' 's/CODE_SIGN_IDENTITY = "iPhone Developer";/CODE_SIGN_IDENTITY = "";/g' Runner.xcodeproj/project.pbxproj
-          sed -i '' 's/"CODE_SIGN_IDENTITY\[sdk=iphoneos\*\]" = "iPhone Developer";/"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";/g' Runner.xcodeproj/project.pbxproj
+            # 3. ذخیره فایل
+            project.save
+          '
+          cd ..
 
-      # مرحله ۳: بیلد گرفتن (دیگر خودش pod install نمی‌کند چون قبلا انجام شده)
+      # مرحله ۳: بیلد (بدون گیر کردن روی امضا)
       - run: flutter build ios --release --no-codesign
 
+      # مرحله ۴: ساخت Payload برای ipa
       - run: mkdir Payload
         working-directory: build/ios/iphoneos
 
@@ -63,4 +75,3 @@ jobs:
           file: build/ios/iphoneos/FlutterIpaExport.ipa
           tag: v1.0
           overwrite: true
-          body: "This is first release"
