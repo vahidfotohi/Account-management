@@ -6,7 +6,7 @@ part of 'project_financials_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$projectFinancialsHash() => r'a27132a1d7c49f4b9e3a756a20f3f5ed26333119';
+String _$projectFinancialsHash() => r'af24aaa615fc576117331cc406f3174c8cfa91fa';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -73,7 +73,7 @@ class ProjectFinancialsFamily extends Family<AsyncValue<ProjectStats>> {
 
 /// See also [projectFinancials].
 class ProjectFinancialsProvider
-    extends AutoDisposeFutureProvider<ProjectStats> {
+    extends AutoDisposeStreamProvider<ProjectStats> {
   /// See also [projectFinancials].
   ProjectFinancialsProvider(
     String projectId,
@@ -108,7 +108,7 @@ class ProjectFinancialsProvider
 
   @override
   Override overrideWith(
-    FutureOr<ProjectStats> Function(ProjectFinancialsRef provider) create,
+    Stream<ProjectStats> Function(ProjectFinancialsRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -125,7 +125,7 @@ class ProjectFinancialsProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<ProjectStats> createElement() {
+  AutoDisposeStreamProviderElement<ProjectStats> createElement() {
     return _ProjectFinancialsProviderElement(this);
   }
 
@@ -145,13 +145,13 @@ class ProjectFinancialsProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin ProjectFinancialsRef on AutoDisposeFutureProviderRef<ProjectStats> {
+mixin ProjectFinancialsRef on AutoDisposeStreamProviderRef<ProjectStats> {
   /// The parameter `projectId` of this provider.
   String get projectId;
 }
 
 class _ProjectFinancialsProviderElement
-    extends AutoDisposeFutureProviderElement<ProjectStats>
+    extends AutoDisposeStreamProviderElement<ProjectStats>
     with ProjectFinancialsRef {
   _ProjectFinancialsProviderElement(super.provider);
 
