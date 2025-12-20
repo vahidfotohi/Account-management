@@ -1,0 +1,49 @@
+# این فایل شامل بهترین تنظیمات برای پروژه‌های Clean Architecture با Riverpod و Freezed است.
+
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  # 1. نادیده گرفتن فایل‌های تولید شده (بسیار مهم برای Riverpod و Drift)
+  # این کار باعث می‌شود آنالایزر روی فایل‌های g.dart و freezed.dart وقت نگذارد و ارورهای آن‌ها را نادیده بگیرد.
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.config.dart"
+    - "lib/generated_plugin_registrant.dart"
+
+  errors:
+    # نادیده گرفتن ارورهای مربوط به Annotationها در Freezed
+    invalid_annotation_target: ignore
+    # نادیده گرفتن هشدارهای مربوط به متدهای قدیمی (در صورت نیاز)
+    deprecated_member_use: ignore
+    empty_catches: ignore
+
+  # 2. فعال‌سازی حالت سخت‌گیرانه (Strong Mode)
+  # این بخش باعث می‌شود دارت اجازه ندهد متغیرهای dynamic بدون چک کردن تایپ رد و بدل شوند.
+  # این کار باگ‌های زمان اجرا (Runtime Errors) را به شدت کاهش می‌دهد.
+  language:
+#    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+
+linter:
+  rules:
+    # --- قوانین مربوط به پرفورمنس (Performance) ---
+    prefer_const_constructors: true # اجبار به استفاده از const برای ویجت‌های ثابت
+    prefer_const_constructors_in_immutables: true
+    prefer_const_declarations: true
+    prefer_const_literals_to_create_immutables: true
+
+    # --- قوانین مربوط به تمیزی کد (Clean Code) ---
+    prefer_final_locals: true # متغیرهای داخل توابع باید final باشند مگر اینکه تغییر کنند
+    unnecessary_this: true # حذف this اضافی
+    prefer_single_quotes: true # استفاده از تک کوتیشن ' بجای "
+    require_trailing_commas: true # اجبار به گذاشتن ویرگول آخر (برای فرمت‌دهی بهتر کد)
+
+    # --- قوانین مربوط به امنیت و باگ‌گیری ---
+    avoid_print: true # جلوگیری از print (استفاده از debugPrint یا Log)
+    use_build_context_synchronously: true # جلوگیری از استفاده خطرناک Context بعد از await
+    cancel_subscriptions: true # اجبار به بستن Streamها
+    close_sinks: true # اجبار به بستن Sinkها
+    avoid_void_async: true # جلوگیری از void async (مگر برای event handlerها)
+    always_declare_return_types: true # اجبار به نوشتن نوع خروجی توابع
