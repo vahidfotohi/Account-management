@@ -17,81 +17,44 @@ jobs:
 
       - run: flutter pub get
 
-      # مرحله ۱: نصب پادها (بسیار مهم: اول باید پروژه Pods ساخته شود)
       - name: Install Pods
         run: |
           cd ios
           pod install --repo-update
           cd ..
 
-      # مرحله ۲: جراحی کامل (Runner + Pods) با روبی
-      - name: Disable Code Signing completely (Runner & Pods)
+      - name: 🛠️ Hard-Fix Project File
         run: |
           cd ios
-          ruby -e '
-            require "xcodeproj"
-
-            # تابع کمکی برای غیرفعال کردن ساینینگ در یک پروژه
-            def disable_signing(project_path)
-              return unless File.exist?(project_path)
-              puts "Processing: #{project_path}"
-              project = Xcodeproj::Project.open(project_path)
+          # حذف کامل تنظیمات مربوط به Team و Signing از کل فایل پروژه
+          sed -i '' '/DEVELOPMENT_TEAM/d' Runner.xcodeproj/project.pbxproj
+          sed -i '' '/ProvisioningStyle/d' Runner.xcodeproj/project.pbxproj
+          sed -i '' '/CODE_SIGN_STYLE/d' Runner.xcodeproj/project.pbxproj
           
-              project.targets.each do |target|
-                puts "  Target: #{target.name}"
-                target.build_configurations.each do |config|
-                  config.build_settings["CODE_SIGN_STYLE"] = "Manual"
-                  config.build_settings["CODE_SIGNING_ALLOWED"] = "NO"
-                  config.build_settings["CODE_SIGNING_REQUIRED"] = "NO"
-                  config.build_settings["CODE_SIGN_IDENTITY"] = ""
-                  config.build_settings["EXPANDED_CODE_SIGN_IDENTITY"] = ""
-                  config.build_settings["PROVISIONING_PROFILE_SPECIFIER"] = ""
-                  config.build_settings["DEVELOPMENT_TEAM"] = ""
-                end
-              end
-          
-              # فقط در پروژه اصلی این اتریبیوت‌ها وجود دارند
-              if project.root_object.attributes["TargetAttributes"]
-                 project.root_object.attributes.delete("TargetAttributes")
-              end
-          
-              project.save
-            end
-
-            # 1. اصلاح پروژه اصلی
-            disable_signing("Runner.xcodeproj")
-          
-            # 2. اصلاح پروژه پادها (اغلب ارور از اینجا ناشی می‌شود)
-            disable_signing("Pods/Pods.xcodeproj")
-          '
-          
-          # لایه اطمینان: تزریق به فایل‌های کانفیگ فلاتر
-          echo "CODE_SIGNING_REQUIRED=NO" >> Flutter/Release.xcconfig
+          # غیرفعال کردن اجباری امضا در سطح فایل‌های کانفیگ
           echo "CODE_SIGNING_ALLOWED=NO" >> Flutter/Release.xcconfig
+          echo "CODE_SIGNING_REQUIRED=NO" >> Flutter/Release.xcconfig
           echo "CODE_SIGN_IDENTITY=" >> Flutter/Release.xcconfig
-          echo "EXPANDED_CODE_SIGN_IDENTITY=" >> Flutter/Release.xcconfig
-          
           cd ..
 
-      # مرحله ۳: بیلد تمیز (بدون آرگومان‌های اضافه که باعث ارور می‌شدند)
-      - run: flutter build ios --release --no-codesign
+      - name: 🚀 Build iOS (The Reliable Way)
+        run: |
+          # استفاده از دستور بیلد فلاتر با فلگ‌های مستقیم برای xcodebuild
+          flutter build ios --release --no-codesign --extra-gen-snapshot-options="--no-precompiled" --verbose
 
-      # مرحله ۴: پکیج کردن
-      - run: mkdir Payload
-        working-directory: build/ios/iphoneos
+      - name: 📦 Create IPA (Manual Packaging)
+        run: |
+          cd build/ios/iphoneos
+          mkdir Payload
+          cp -r Runner.app Payload/
+          zip -qq -r FlutterIpaExport.ipa Payload/
+          cd ../../../
 
-      - run: mv Runner.app/ Payload
-        working-directory: build/ios/iphoneos
-
-      - name: Zip output
-        run: zip -qq -r -9 FlutterIpaExport.ipa Payload
-        working-directory: build/ios/iphoneos
-
-      - name: Upload binaries to release
+      - name: 📤 Upload to Release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: build/ios/iphoneos/FlutterIpaExport.ipa
           tag: v1.0
           overwrite: true
-          body: "Signed-disabled release"
+          body: "این فایل بدون امضا (Unsigned) است و فقط روی گوشی‌های جیلبریک شده یا برای تست‌های خاص قابل استفاده است."
